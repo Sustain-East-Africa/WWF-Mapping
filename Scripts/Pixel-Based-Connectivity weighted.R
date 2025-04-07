@@ -3,7 +3,7 @@ library(terra)
 library(sf)
 
 # ---- 1. Read and Prepare the Landscape ----
-landscape_sf <- st_read("E:/Work/DASCOT/PROJECTS/WWF Mapping/Analysis/Land for Life Geoscope.shp")
+landscape_sf <- st_read("path to AOI.shp")
 landscape <- vect(landscape_sf)
 landscape_proj <- project(landscape, "EPSG:32737")  # UTM Zone 37S
 
@@ -11,7 +11,7 @@ landscape_proj <- project(landscape, "EPSG:32737")  # UTM Zone 37S
 r_template <- rast(ext(landscape_proj), resolution = 100, crs = crs(landscape_proj))
 
 # ---- 2. Read, Validate, and Prepare the Fence Data ----
-fences_sf <- st_read("E:/Work/DASCOT/PROJECTS/WWF Mapping/Data/2025_Fences.shp")
+fences_sf <- st_read("path to Fences.shp")
 fences_sf <- st_make_valid(fences_sf)
 
 # Reproject if needed
@@ -46,5 +46,5 @@ kernel <- matrix(ifelse(offsets$dist <= radius_cells, 1, NA),
 fence_buffer_avg <- focal(fence_raster, w = kernel, fun = mean, na.rm = TRUE)
 
 # ---- 6. Save and Plot the Results ----
-writeRaster(fence_buffer_avg, filename = "E:/Work/DASCOT/PROJECTS/WWF Mapping/Data/2025_Latest_Weighted.tif", overwrite = TRUE)
+writeRaster(fence_buffer_avg, filename = "path/Connectivity.tif", overwrite = TRUE)
 plot(fence_buffer_avg, main = "5 km Neighborhood Weighted Mean (terra)")
